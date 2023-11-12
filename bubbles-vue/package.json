@@ -1,18 +1,25 @@
 {
   "name": "bubbles-vue",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Bubbles Vue Components",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Giogia/bubbles.git"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "bubbles": "file:../bubbles-web-components",
     "vue": "^3.3.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
-    "vite": "^4.4.5"
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
   }
 }
