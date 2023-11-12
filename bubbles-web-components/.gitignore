@@ -31,4 +31,5 @@ node_modules/
 # Stencil
 .stencil/
 dist
+loader
 www
