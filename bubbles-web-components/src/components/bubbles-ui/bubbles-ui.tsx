@@ -12,13 +12,10 @@ export class BubblesUi {
   /**
    * The data nodes passed to the force graph
    */
-  @Prop() data: {
-    nodes: object[],
-    links: object[]
-  } = {
-      nodes: [],
-      links: []
-    };
+  @Prop() data?: {
+    nodes?: { radius: number; x: number; y: number; name: string; }[],
+    links?: { source: number; target: number; }[]
+  } = {};
 
   @State() simulation: any
 

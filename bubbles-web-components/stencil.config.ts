@@ -7,18 +7,20 @@ export const config: Config = {
   globalStyle: 'src/index.css',
   outputTargets: [
     reactOutputTarget({
-      componentCorePackage: 'bubbles',
-      proxiesFile: '../bubbles-react/src/components/index.ts',
+      componentCorePackage: 'bubbles-web-components',
+      customElementsDir: 'dist/components',
+      proxiesFile: '../bubbles-react/src/components.ts',
       includeImportCustomElements: true
     }),
     vueOutputTarget({
       componentCorePackage: 'bubbles',
+      customElementsDir: 'dist/components',
       proxiesFile: '../bubbles-vue/src/components.ts',
       includeImportCustomElements: true
     }),
     {
       type: 'dist',
-      esmLoaderPath: '../loader',
+      esmLoaderPath: './loader',
     },
     {
       type: 'dist-custom-elements',

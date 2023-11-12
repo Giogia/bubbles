@@ -10,9 +10,9 @@ export namespace Components {
         /**
           * The data nodes passed to the force graph
          */
-        "data": {
-    nodes: object[],
-    links: object[]
+        "data"?: {
+    nodes?: { radius: number; x: number; y: number; name: string; }[],
+    links?: { source: number; target: number; }[]
   };
     }
 }
@@ -33,8 +33,8 @@ declare namespace LocalJSX {
           * The data nodes passed to the force graph
          */
         "data"?: {
-    nodes: object[],
-    links: object[]
+    nodes?: { radius: number; x: number; y: number; name: string; }[],
+    links?: { source: number; target: number; }[]
   };
     }
     interface IntrinsicElements {

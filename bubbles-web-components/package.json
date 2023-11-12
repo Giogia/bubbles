@@ -15,8 +15,7 @@
     "url": "https://github.com/Giogia/bubbles.git"
   },
   "files": [
-    "dist/",
-    "loader/"
+    "dist/"
   ],
   "scripts": {
     "build": "stencil build --docs",
