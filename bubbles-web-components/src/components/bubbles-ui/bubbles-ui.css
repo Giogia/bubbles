@@ -1,0 +1,16 @@
+.bubbles {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.bubble {
+  background-color: rgb(241, 249, 255);
+  color: rgb(136, 159, 218);
+  opacity: 0.75;
+  border-radius: 50%;
+  text-align: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: height 0.35s ease-out, width 0.35s ease-out
+}

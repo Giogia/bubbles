@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Bubbles Components</title>
+    <link rel="stylesheet" href="/build/bubbles.css">
+    <script type="module" src="/build/bubbles.esm.js"></script>
+    <script nomodule src="/build/bubbles.js"></script>
+  </head>
+  <body>
+    <bubbles-ui></bubbles-ui>
+    <script>
+    document
+      const bubbles = document.querySelector('bubbles-ui')
+      bubbles.data = {
+        nodes: [ 
+          { radius: 0.1, x: 0, y: 0, name: "Node 0" },
+          { radius: 0.1, x: 0.25, y: 0.1, name: "Node 1" },
+          { radius: 0.25, x: 0.5, y: 0.35, name: "Node 2" },
+          { radius: 0.25, x: 0.35, y: 0.75, name: "Node 3" },
+          { radius: 0.1, x: 0.5, y: 0.5, name: "Node 4" },
+          { radius: 0.1, x: 0.51, y: 0.85, name: "Node 5" },
+          { radius: 0.25, x: 0.25, y: 0.25, name: "Node 6" },
+          { radius: 0.1, x: 0.15, y: 0.05, name: "Node 7" },
+          { radius: 0.1, x: 0.63, y: 0.45, name: "Node 8" },      
+        ],
+      }
+  </script>
+  </body>
+</html>
