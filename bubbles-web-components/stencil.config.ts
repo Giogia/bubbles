@@ -7,7 +7,7 @@ export const config: Config = {
   globalStyle: 'src/index.css',
   outputTargets: [
     reactOutputTarget({
-      componentCorePackage: 'bubbles-web-components',
+      componentCorePackage: 'bubbles',
       customElementsDir: 'dist/components',
       proxiesFile: '../bubbles-react/src/components.ts',
       includeImportCustomElements: true

@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bubbles-web-components": "file:../bubbles-web-components",
+    "bubbles": "file:../bubbles-web-components",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
