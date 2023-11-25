@@ -1,50 +1,53 @@
 import { Element, Component, Host, Prop, h, Watch, State } from '@stencil/core'
-import { forceX, forceY, forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, select } from 'd3'
+import { forceX, forceY, forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, selectAll } from 'd3'
 import { getPosition, resize } from '../../utils/utils';
+import type { Node, Link } from './bubbles-ui.types'
 
 @Component({
   tag: 'bubbles-ui',
   styleUrl: 'bubbles-ui.css',
-  shadow: true,
 })
 export class BubblesUi {
+  /**
+   * The Bubble UI element
+   */
   @Element() element: HTMLElement;
   /**
    * The data nodes passed to the force graph
    */
   @Prop() data?: {
-    nodes?: { radius: number; x: number; y: number; name: string; }[],
-    links?: { source: number; target: number; }[]
+    nodes?: Node[],
+    links?: Link[]
   } = {};
 
+  @State() nodes: any
   @State() simulation: any
 
   // constructor() {}
 
-  connectedCallback() {
-    const element = this.element.shadowRoot.querySelector(".bubbles")
-
-    element
-      .querySelectorAll(".bubble")
-      .forEach(childElement => element.removeChild(childElement))
-  }
+  // connectedCallback() {}
 
   componentDidLoad() {
+
     const { nodes, links } = this.data
 
-    const element = this.element.shadowRoot.querySelector(".bubbles")
+    const bubbles = this.element.children
 
-    const bubbles = select(element)
-      .selectAll()
-      .data(nodes)
-      .enter()
-      .append("div")
+    if (bubbles.length !== nodes.length) throw new Error('Nodes length does not match the number of children')
+
+    const data = nodes ?? Array.prototype.map.call(bubbles, (bubble: HTMLElement) => ({
+      x: parseInt(bubble.style.top) / 100,
+      y: parseInt(bubble.style.left) / 100,
+      radius: 0.25
+    })) as Node[]
+
+    this.nodes = selectAll(bubbles)
+      .data(data)
       .attr("class", "bubble")
-      .html(d => `<p>${d.name}</p>`)
       .style("height", 0)
       .style("width", 0)
 
-    this.simulation = forceSimulation(nodes)
+    this.simulation = forceSimulation(data)
 
       /** Nodes */
       // .nodes(nodes)
@@ -79,7 +82,7 @@ export class BubblesUi {
       .force("collide", forceCollide()
         // .strength(1)
         // .radius(d => d.radius * Math.min(element.clientHeight, element.clientWidth))
-        .radius(d => d.radius)
+        .radius((node: Node) => node.radius)
         .iterations(3)
       )
       .force("charge", forceManyBody()
@@ -95,27 +98,27 @@ export class BubblesUi {
         .distance(0)
         .iterations(3)
       )
-      .on("tick", () => this.tick(bubbles, element))
+      .on("tick", () => this.tick())
       .on("end", () => { })
   }
 
-  tick(bubbles, element) {
-    bubbles
-      .style("width", bubble => {
+  tick() {
+    this.nodes
+      .style("width", (bubble: Node) => {
         const { over: overX } = getPosition(bubble.x, bubble.radius)
         const { over: overY } = getPosition(bubble.y, bubble.radius)
-        return resize(bubble, (overX || overY), element)
+        return resize(bubble, (overX || overY), this.element)
       })
-      .style("height", bubble => {
+      .style("height", (bubble: Node) => {
         const { over: overX } = getPosition(bubble.x, bubble.radius)
         const { over: overY } = getPosition(bubble.y, bubble.radius)
-        return resize(bubble, (overX || overY), element)
+        return resize(bubble, (overX || overY), this.element)
       })
-      .style("left", bubble => {
+      .style("left", (bubble: Node) => {
         const { position } = getPosition(bubble.x, bubble.radius)
         return position
       })
-      .style("top", bubble => {
+      .style("top", (bubble: Node) => {
         const { position } = getPosition(bubble.y, bubble.radius)
         return position
       })
@@ -126,14 +129,11 @@ export class BubblesUi {
     this.simulation.nodes(nodes)
   }
 
-  disconnectedCallback() {
-  }
+  // disconnectedCallback() {}
 
   render() {
     return (
-      <Host>
-        <div class="bubbles" />
-      </Host>
+      <Host class="bubbles" />
     )
   }
 }

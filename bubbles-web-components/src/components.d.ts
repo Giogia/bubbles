@@ -5,14 +5,16 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Link, Node } from "./components/bubbles-ui/bubbles-ui.types";
+export { Link, Node } from "./components/bubbles-ui/bubbles-ui.types";
 export namespace Components {
     interface BubblesUi {
         /**
           * The data nodes passed to the force graph
          */
         "data"?: {
-    nodes?: { radius: number; x: number; y: number; name: string; }[],
-    links?: { source: number; target: number; }[]
+    nodes?: Node[],
+    links?: Link[]
   };
     }
 }
@@ -33,8 +35,8 @@ declare namespace LocalJSX {
           * The data nodes passed to the force graph
          */
         "data"?: {
-    nodes?: { radius: number; x: number; y: number; name: string; }[],
-    links?: { source: number; target: number; }[]
+    nodes?: Node[],
+    links?: Link[]
   };
     }
     interface IntrinsicElements {

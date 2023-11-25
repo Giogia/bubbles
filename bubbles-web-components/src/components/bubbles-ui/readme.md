@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property | Attribute | Description                              | Type                                                                                                                    | Default |
-| -------- | --------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| `data`   | --        | The data nodes passed to the force graph | `{ nodes?: { radius: number; x: number; y: number; name: string; }[]; links?: { source: number; target: number; }[]; }` | `{}`    |
+| Property | Attribute | Description                              | Type                                  | Default |
+| -------- | --------- | ---------------------------------------- | ------------------------------------- | ------- |
+| `data`   | --        | The data nodes passed to the force graph | `{ nodes?: Node[]; links?: Link[]; }` | `{}`    |
 
 
 ----------------------------------------------

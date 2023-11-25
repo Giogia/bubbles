@@ -17,6 +17,6 @@ export function getPosition(position: number, radius = 0, min = 0, max = 1) {
   }
 }
 
-export function resize(node, over, element){
+export function resize(node, over, element) {
   return (over ? 0.5 : 1) * 2 * node.radius * Math.min(element.clientHeight, element.clientWidth) + "px"
 }
