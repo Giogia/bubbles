@@ -14,5 +14,17 @@
   position: absolute;
   overflow: auto;
   transform: translate(-50%, -50%);
-  transition: height 0.35s ease-out, width 0.35s ease-out;
+  transition: all 0.35s ease-out;
+}
+
+.bubble:hover {
+  transform: translate(-50%, -50%) scale(1.01);
+}
+
+.bubble:active {
+  transform: translate(-50%, -50%) scale(.99);
+}
+
+.bubble::-webkit-scrollbar {
+  display: none;
 }

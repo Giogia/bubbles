@@ -1,7 +1,7 @@
 import { Element, Component, Host, Prop, h, Watch, State } from '@stencil/core'
-import { forceX, forceY, forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, selectAll } from 'd3'
-import { getPosition, resize } from '../../utils/utils';
+import { forceX, forceY, forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, select, selectAll } from 'd3'
 import type { Node, Link } from './bubbles-ui.types'
+import { percentage } from '../../utils/utils'
 
 @Component({
   tag: 'bubbles-ui',
@@ -61,66 +61,58 @@ export class BubblesUi {
 
       /** Velocity */
       // .velocityDecay(0.4)
-      // .velocityDecay(0.5) // friction
+      .velocityDecay(0.75) // friction
 
       /** Forces */
       .force("center", forceCenter()
-        .strength(0.1)
-        // .x(element.clientWidth / 2)
-        // .y(element.clientHeight / 2)
+        // .strength(0.1)
         .x(0.5)
         .y(0.5)
       )
       .force("x", forceX()
         // .x(0)
-        .strength(0.01)
+        .strength(0.1)
       )
       .force("y", forceY()
         // .y(0)
-        .strength(0.01)
+        .strength(0.1)
       )
       .force("collide", forceCollide()
         // .strength(1)
-        // .radius(d => d.radius * Math.min(element.clientHeight, element.clientWidth))
-        .radius((node: Node) => node.radius)
-        .iterations(3)
+        // .iterations(3)
+        .radius((node: Node) => 0.5 * node.radius + 0.01)
       )
       .force("charge", forceManyBody()
         // .theta(0.9)
         // .distanceMin(1)
         // .distanceMax(Infinity)
-        // .strength((d, i) => i ? 0 : - element.clientWidth * 2 / 3)
-        .strength(0)
+        .strength(-0.001)
       )
       .force("link", forceLink(links)
         // .id(d => d.name)
-        .strength(1)
+        // .strength(0)
+        // .iterations(3)
         .distance(0)
-        .iterations(3)
       )
       .on("tick", () => this.tick())
       .on("end", () => { })
+
+    select(this.element).style("visibility", "visible")
   }
 
   tick() {
     this.nodes
       .style("width", (bubble: Node) => {
-        const { over: overX } = getPosition(bubble.x, bubble.radius)
-        const { over: overY } = getPosition(bubble.y, bubble.radius)
-        return resize(bubble, (overX || overY), this.element)
+        return bubble.radius * this.element.clientWidth + "px"
       })
       .style("height", (bubble: Node) => {
-        const { over: overX } = getPosition(bubble.x, bubble.radius)
-        const { over: overY } = getPosition(bubble.y, bubble.radius)
-        return resize(bubble, (overX || overY), this.element)
+        return bubble.radius * this.element.clientHeight + "px"
       })
       .style("left", (bubble: Node) => {
-        const { position } = getPosition(bubble.x, bubble.radius)
-        return position
+        return percentage(bubble.x)
       })
       .style("top", (bubble: Node) => {
-        const { position } = getPosition(bubble.y, bubble.radius)
-        return position
+        return percentage(bubble.y)
       })
   }
 
