@@ -9,7 +9,7 @@
 
 | Property | Attribute | Description                              | Type                                  | Default |
 | -------- | --------- | ---------------------------------------- | ------------------------------------- | ------- |
-| `data`   | --        | The data nodes passed to the force graph | `{ nodes?: Node[]; links?: Link[]; }` | `{}`    |
+| `graph`  | --        | The data nodes passed to the force graph | `{ nodes?: Node[]; links?: Link[]; }` | `{}`    |
 
 
 ----------------------------------------------
