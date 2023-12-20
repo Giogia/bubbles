@@ -15,39 +15,40 @@ export class BubblesUi {
   /**
    * The data nodes passed to the force graph
    */
-  @Prop() data?: {
+  @Prop() graph?: {
     nodes?: Node[],
     links?: Link[]
   } = {};
 
   @State() nodes: any
+  @State() data: any
   @State() simulation: any
 
   // constructor() {}
 
   // connectedCallback() {}
 
-  componentDidLoad() {
+  componentWillLoad() {
 
-    const { nodes, links } = this.data
+    const { nodes, links } = this.graph
+    const { children } = this.element
 
-    const bubbles = this.element.children
+    if (children.length !== nodes.length) throw new Error('Nodes length does not match the number of children')
 
-    if (bubbles.length !== nodes.length) throw new Error('Nodes length does not match the number of children')
-
-    const data = nodes ?? Array.prototype.map.call(bubbles, (bubble: HTMLElement) => ({
+    this.data = nodes ?? Array.prototype.map.call(children, (bubble: HTMLElement) => ({
       x: parseInt(bubble.style.top) / 100,
       y: parseInt(bubble.style.left) / 100,
       radius: 0.25
     })) as Node[]
 
-    this.nodes = selectAll(bubbles)
-      .data(data)
+    this.nodes = selectAll(children)
+      .data(this.data)
       .attr("class", "bubble")
       .style("height", 0)
       .style("width", 0)
+      .on("click", (e) => this.click(e))
 
-    this.simulation = forceSimulation(data)
+    this.simulation = forceSimulation(this.data)
 
       /** Nodes */
       // .nodes(nodes)
@@ -61,7 +62,7 @@ export class BubblesUi {
 
       /** Velocity */
       // .velocityDecay(0.4)
-      .velocityDecay(0.75) // friction
+      .velocityDecay(0.25) // low friction
 
       /** Forces */
       .force("center", forceCenter()
@@ -116,7 +117,19 @@ export class BubblesUi {
       })
   }
 
-  @Watch('data')
+  click(e: MouseEvent) {
+    const { id } = this.simulation.find(e.x / window.innerWidth, e.y / window.innerHeight)
+
+    this.data = this.data.map(node => id && node.id === id ?
+      { ...node, radius: Math.min(1.5 * node.radius, 0.75) } :
+      node
+    )
+
+    this.nodes.data(this.data)
+    this.simulation.nodes(this.data).alpha(1.0).restart()
+  }
+
+  @Watch('graph')
   simulate({ nodes }) {
     this.simulation.nodes(nodes)
   }

@@ -10,30 +10,30 @@
   </head>
   <body>
     <bubbles-ui style="visibility: hidden">
-      <div>Test 0</div>
-      <div>Test 1</div>
-      <div>Test 2</div>
-      <div>Test 3</div>
-      <div>Test 4</div>
-      <div>Test 5</div>
-      <div>Test 6</div>
-      <div>Test 7</div>
-      <div>Test 8</div>
-      <div>Test 9</div>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
+      <bubble-card></bubble-card>
     </bubbles-ui>
     <script>
-      document.querySelector('bubbles-ui').data = {
+      document.querySelector('bubbles-ui').graph = {
         nodes: [ 
-          { radius: 0.30, x: 0.2, y: 0.2, name: "Node 0" },
-          { radius: 0.30, x: 0.8, y: 0.2, name: "Node 1" },
-          { radius: 0.40, x: 0.2, y: 0.8, name: "Node 2" },
-          { radius: 0.30, x: 0.8, y: 0.8, name: "Node 3" },
-          { radius: 0.15, x: 0.5, y: 0.5, name: "Node 4" },
-          { radius: 0.25, x: 0.5, y: 0.1, name: "Node 5" },
-          { radius: 0.15, x: 0.1, y: 0.5, name: "Node 6" },
-          { radius: 0.15, x: 0.9, y: 0.5, name: "Node 7" },
-          { radius: 0.15, x: 0.5, y: 0.9, name: "Node 8" },
-          { radius: 0.10, x: 0.0, y: 0.0, name: "Node 9" },     
+          { radius: 0.30, x: 0.2, y: 0.2, id: "Node 0" },
+          { radius: 0.30, x: 0.8, y: 0.2, id: "Node 1" },
+          { radius: 0.40, x: 0.2, y: 0.8, id: "Node 2" },
+          { radius: 0.30, x: 0.8, y: 0.8, id: "Node 3" },
+          { radius: 0.15, x: 0.5, y: 0.5, id: "Node 4" },
+          { radius: 0.25, x: 0.5, y: 0.1, id: "Node 5" },
+          { radius: 0.15, x: 0.1, y: 0.5, id: "Node 6" },
+          { radius: 0.15, x: 0.9, y: 0.5, id: "Node 7" },
+          { radius: 0.15, x: 0.5, y: 0.9, id: "Node 8" },
+          { radius: 0.10, x: 0.0, y: 0.0, id: "Node 9" },     
         ],
         links: [
           // {target: 6, source: 9},

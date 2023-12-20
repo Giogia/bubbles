@@ -4,6 +4,11 @@
 export type Node = {
 
   /**
+   * The unique identifier of the node.
+   */
+  id: number | string;
+
+  /**
    * The radius of the node.
    */
   radius: number;

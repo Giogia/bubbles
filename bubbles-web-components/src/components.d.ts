@@ -8,17 +8,28 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Link, Node } from "./components/bubbles-ui/bubbles-ui.types";
 export { Link, Node } from "./components/bubbles-ui/bubbles-ui.types";
 export namespace Components {
+    interface BubbleCard {
+        "description"?: HTMLElement;
+        "icon"?: HTMLElement;
+        "name"?: HTMLElement;
+    }
     interface BubblesUi {
         /**
           * The data nodes passed to the force graph
          */
-        "data"?: {
+        "graph"?: {
     nodes?: Node[],
     links?: Link[]
   };
     }
 }
 declare global {
+    interface HTMLBubbleCardElement extends Components.BubbleCard, HTMLStencilElement {
+    }
+    var HTMLBubbleCardElement: {
+        prototype: HTMLBubbleCardElement;
+        new (): HTMLBubbleCardElement;
+    };
     interface HTMLBubblesUiElement extends Components.BubblesUi, HTMLStencilElement {
     }
     var HTMLBubblesUiElement: {
@@ -26,20 +37,27 @@ declare global {
         new (): HTMLBubblesUiElement;
     };
     interface HTMLElementTagNameMap {
+        "bubble-card": HTMLBubbleCardElement;
         "bubbles-ui": HTMLBubblesUiElement;
     }
 }
 declare namespace LocalJSX {
+    interface BubbleCard {
+        "description"?: HTMLElement;
+        "icon"?: HTMLElement;
+        "name"?: HTMLElement;
+    }
     interface BubblesUi {
         /**
           * The data nodes passed to the force graph
          */
-        "data"?: {
+        "graph"?: {
     nodes?: Node[],
     links?: Link[]
   };
     }
     interface IntrinsicElements {
+        "bubble-card": BubbleCard;
         "bubbles-ui": BubblesUi;
     }
 }
@@ -47,6 +65,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "bubble-card": LocalJSX.BubbleCard & JSXBase.HTMLAttributes<HTMLBubbleCardElement>;
             "bubbles-ui": LocalJSX.BubblesUi & JSXBase.HTMLAttributes<HTMLBubblesUiElement>;
         }
     }
