@@ -22,25 +22,26 @@
       <bubble-card></bubble-card>
     </bubbles-ui>
     <script>
-      document.querySelector('bubbles-ui').graph = {
-        nodes: [ 
-          { radius: 0.30, x: 0.2, y: 0.2, id: "Node 0" },
-          { radius: 0.30, x: 0.8, y: 0.2, id: "Node 1" },
-          { radius: 0.40, x: 0.2, y: 0.8, id: "Node 2" },
-          { radius: 0.30, x: 0.8, y: 0.8, id: "Node 3" },
-          { radius: 0.15, x: 0.5, y: 0.5, id: "Node 4" },
-          { radius: 0.25, x: 0.5, y: 0.1, id: "Node 5" },
-          { radius: 0.15, x: 0.1, y: 0.5, id: "Node 6" },
-          { radius: 0.15, x: 0.9, y: 0.5, id: "Node 7" },
-          { radius: 0.15, x: 0.5, y: 0.9, id: "Node 8" },
-          { radius: 0.10, x: 0.0, y: 0.0, id: "Node 9" },     
-        ],
-        links: [
-          // {target: 6, source: 9},
-          // {target: 5, source: 4},
-          // {target: 1, source: 2},
-        ]
-      }
+      const bubbles = document.querySelector('bubbles-ui')
+
+      bubbles.nodes = [ 
+        { radius: 0.30, x: 0.2, y: 0.2, id: "Node 0" },
+        { radius: 0.30, x: 0.8, y: 0.2, id: "Node 1" },
+        { radius: 0.40, x: 0.2, y: 0.8, id: "Node 2" },
+        { radius: 0.30, x: 0.8, y: 0.8, id: "Node 3" },
+        { radius: 0.15, x: 0.5, y: 0.5, id: "Node 4" },
+        { radius: 0.25, x: 0.5, y: 0.1, id: "Node 5" },
+        { radius: 0.15, x: 0.1, y: 0.5, id: "Node 6" },
+        { radius: 0.15, x: 0.9, y: 0.5, id: "Node 7" },
+        { radius: 0.15, x: 0.5, y: 0.9, id: "Node 8" },
+        { radius: 0.10, x: 0.0, y: 0.0, id: "Node 9" },     
+      ]
+      
+      bubbles.links = [
+        // {target: 6, source: 9},
+        // {target: 5, source: 4},
+        // {target: 1, source: 2},
+      ]
     </script>
   </body>
 </html>

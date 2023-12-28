@@ -1,7 +1,6 @@
 import { Element, Component, Host, Prop, h, Watch, State } from '@stencil/core'
 import { forceX, forceY, forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, select, selectAll } from 'd3'
 import type { Node, Link } from './bubbles-ui.types'
-import { percentage } from '../../utils/utils'
 
 @Component({
   tag: 'bubbles-ui',
@@ -12,41 +11,57 @@ export class BubblesUi {
    * The Bubble UI element
    */
   @Element() element: HTMLElement;
-  /**
-   * The data nodes passed to the force graph
-   */
-  @Prop() graph?: {
-    nodes?: Node[],
-    links?: Link[]
-  } = {};
 
-  @State() nodes: any
+  /**
+   * The nodes composing the force graph
+   */
+  @Prop() nodes?: Node[] = [];
+
+  /**
+   * The links between the force graph nodes
+   */
+  @Prop() links?: Link[] = [];
+
+  /**
+   * The center of the force graph
+   */
+  @Prop() center?: { x?: number, y?: number } = { x: 0.5, y: 0.5 };
+
   @State() data: any
+  @State() elements: any
   @State() simulation: any
+  @State() simulationCenter = { x: 0.5, y: 0.5 }
 
   // constructor() {}
 
-  // connectedCallback() {}
+  connectedCallback() {
+    window.addEventListener('resize', () => this.restartSimulation())
+  }
 
   componentWillLoad() {
 
-    const { nodes, links } = this.graph
     const { children } = this.element
 
-    if (children.length !== nodes.length) throw new Error('Nodes length does not match the number of children')
+    if (children.length !== this.nodes.length) throw new Error('Nodes length does not match the number of children')
 
-    this.data = nodes ?? Array.prototype.map.call(children, (bubble: HTMLElement) => ({
+    this.data = (this.nodes ?? Array.prototype.map.call(children, (bubble: HTMLElement) => ({
       x: parseInt(bubble.style.top) / 100,
       y: parseInt(bubble.style.left) / 100,
       radius: 0.25
+    }))).map((node: Node, index: number) => ({
+      ...node,
+      id: node.id ?? index,
+      x: node.x - this.center.x,
+      y: node.y - this.center.y
     })) as Node[]
 
-    this.nodes = selectAll(children)
+    this.elements = selectAll(children)
       .data(this.data)
       .attr("class", "bubble")
       .style("height", 0)
       .style("width", 0)
-      .on("click", (e) => this.click(e))
+      .on("click", (e: MouseEvent) => this.click(e))
+      .on("resize", () => this.restartSimulation())
 
     this.simulation = forceSimulation(this.data)
 
@@ -58,6 +73,7 @@ export class BubblesUi {
       // .alpha(1)
       // .alphaMin(0.001)
       // .alphaDecay(1 - pow(0.001, 1 / 300)) around 0.0228
+      .alphaDecay(0.25)
       .alphaTarget(0)
 
       /** Velocity */
@@ -67,8 +83,8 @@ export class BubblesUi {
       /** Forces */
       .force("center", forceCenter()
         // .strength(0.1)
-        .x(0.5)
-        .y(0.5)
+        .x(this.simulationCenter.x - this.center.x)
+        .y(this.simulationCenter.y - this.center.y)
       )
       .force("x", forceX()
         // .x(0)
@@ -81,7 +97,7 @@ export class BubblesUi {
       .force("collide", forceCollide()
         // .strength(1)
         // .iterations(3)
-        .radius((node: Node) => 0.5 * node.radius + 0.01)
+        .radius((node: Node) => 0.5 * node.radius + 0.025)
       )
       .force("charge", forceManyBody()
         // .theta(0.9)
@@ -89,52 +105,78 @@ export class BubblesUi {
         // .distanceMax(Infinity)
         .strength(-0.001)
       )
-      .force("link", forceLink(links)
+      .force("link", forceLink(this.links)
         // .id(d => d.name)
         // .strength(0)
         // .iterations(3)
         .distance(0)
       )
       .on("tick", () => this.tick())
-      .on("end", () => { })
+    // .on("end", () => {})
 
     select(this.element).style("visibility", "visible")
   }
 
   tick() {
-    this.nodes
-      .style("width", (bubble: Node) => {
-        return bubble.radius * this.element.clientWidth + "px"
-      })
-      .style("height", (bubble: Node) => {
-        return bubble.radius * this.element.clientHeight + "px"
-      })
-      .style("left", (bubble: Node) => {
-        return percentage(bubble.x)
-      })
-      .style("top", (bubble: Node) => {
-        return percentage(bubble.y)
-      })
+    this.elements
+      .style("width", ({ radius }: Node) => radius * this.element.clientWidth + "px")
+      .style("height", ({ radius }: Node) => radius * this.element.clientHeight + "px")
+      .style("left", ({ x }: Node) => (x + this.center.x) * 100 + "%")
+      .style("top", ({ y }: Node) => (y + this.center.y) * 100 + "%")
   }
 
   click(e: MouseEvent) {
-    const { id } = this.simulation.find(e.x / window.innerWidth, e.y / window.innerHeight)
+    const x = e.x / window.innerWidth - this.center.x
+    const y = e.y / window.innerHeight - this.center.y
 
-    this.data = this.data.map(node => id && node.id === id ?
-      { ...node, radius: Math.min(1.5 * node.radius, 0.75) } :
-      node
-    )
+    const { id } = this.simulation.find(x, y)
 
-    this.nodes.data(this.data)
-    this.simulation.nodes(this.data).alpha(1.0).restart()
+    this.data = this.data.map(node => {
+      const distanceFactor = 1 - 0.75 * this.distanceFromSimulationCenter(node)
+      // console.log("🚀 ~ file: bubbles-ui.tsx:133 ~ BubblesUi ~ click ~ distanceFactor:", distanceFactor)
+
+      return id && node.id === id ?
+        {
+          ...node,
+          radius: Math.min(1.5 * node.radius, 0.5),
+          x: 0.25 * node.x,
+          y: 0.25 * node.y
+        } :
+        {
+          ...node,
+          radius: 0.9 * Math.max(distanceFactor * node.radius, 0.2)
+        }
+    })
+
+    this.updateNodes()
+    this.restartSimulation()
+  }
+
+  updateNodes() {
+    this.elements.data(this.data)
+    this.simulation.nodes(this.data)
+  }
+
+  restartSimulation(alpha = 1.0) {
+    this.simulation.alpha(alpha).restart()
+  }
+
+  distanceFromSimulationCenter(node) {
+    return Math.sqrt(
+      Math.pow(this.simulationCenter.x - this.center.x + node.x, 2) +
+      Math.pow(this.simulationCenter.y - this.center.y + node.y, 2))
   }
 
   @Watch('graph')
   simulate({ nodes }) {
-    this.simulation.nodes(nodes)
+    this.data = nodes
+    this.updateNodes()
+    this.restartSimulation()
   }
 
-  // disconnectedCallback() {}
+  disconnectedCallback() {
+    window.removeEventListener('resize', () => this.restartSimulation())
+  }
 
   render() {
     return (

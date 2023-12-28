@@ -15,12 +15,17 @@ export namespace Components {
     }
     interface BubblesUi {
         /**
-          * The data nodes passed to the force graph
+          * The center of the force graph
          */
-        "graph"?: {
-    nodes?: Node[],
-    links?: Link[]
-  };
+        "center"?: { x?: number, y?: number };
+        /**
+          * The links between the force graph nodes
+         */
+        "links"?: Link[];
+        /**
+          * The nodes composing the force graph
+         */
+        "nodes"?: Node[];
     }
 }
 declare global {
@@ -49,12 +54,17 @@ declare namespace LocalJSX {
     }
     interface BubblesUi {
         /**
-          * The data nodes passed to the force graph
+          * The center of the force graph
          */
-        "graph"?: {
-    nodes?: Node[],
-    links?: Link[]
-  };
+        "center"?: { x?: number, y?: number };
+        /**
+          * The links between the force graph nodes
+         */
+        "links"?: Link[];
+        /**
+          * The nodes composing the force graph
+         */
+        "nodes"?: Node[];
     }
     interface IntrinsicElements {
         "bubble-card": BubbleCard;
