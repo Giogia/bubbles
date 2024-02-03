@@ -88,11 +88,11 @@ export class BubblesUi {
       )
       .force("x", forceX()
         // .x(0)
-        .strength(0.1)
+        .strength(({ radius }) => Math.min(radius, 0.25))
       )
       .force("y", forceY()
         // .y(0)
-        .strength(0.1)
+        .strength(({ radius }) => Math.min(radius, 0.25))
       )
       .force("collide", forceCollide()
         // .strength(1)
@@ -126,30 +126,36 @@ export class BubblesUi {
   }
 
   click(e: MouseEvent) {
-    const x = e.x / window.innerWidth - this.center.x
-    const y = e.y / window.innerHeight - this.center.y
 
-    const { id } = this.simulation.find(x, y)
+    const { id } = this.getNode(e)
 
     this.data = this.data.map(node => {
-      const distanceFactor = 1 - 0.75 * this.distanceFromSimulationCenter(node)
-      // console.log("🚀 ~ file: bubbles-ui.tsx:133 ~ BubblesUi ~ click ~ distanceFactor:", distanceFactor)
+      const distanceFactor = Math.min(0.9, 0.5 - this.distanceFromSimulationCenter(node))
 
       return id && node.id === id ?
         {
           ...node,
-          radius: Math.min(1.5 * node.radius, 0.5),
+          radius: Math.min(2 * node.radius, 0.5),
           x: 0.25 * node.x,
-          y: 0.25 * node.y
+          y: 0.25 * node.y,
         } :
         {
           ...node,
-          radius: 0.9 * Math.max(distanceFactor * node.radius, 0.2)
+          radius: Math.max(distanceFactor * node.radius, 0.2),
+          x: 1.25 * node.x,
+          y: 1.25 * node.y,
         }
     })
 
     this.updateNodes()
     this.restartSimulation()
+  }
+
+  getNode(e: MouseEvent) {
+    const x = e.x / window.innerWidth - this.center.x
+    const y = e.y / window.innerHeight - this.center.y
+
+    return this.simulation.find(x, y)
   }
 
   updateNodes() {
