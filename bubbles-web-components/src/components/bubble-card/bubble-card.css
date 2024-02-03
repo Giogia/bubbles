@@ -5,6 +5,14 @@ bubble-card {
   align-items: center;
   justify-content: center;
   container: card / size;
+  background-color: rgba(237, 239, 246, 0.5);
+  color: rgb(136, 159, 218);
+}
+
+@media (prefers-color-scheme: dark) {
+  bubble-card {
+    background-color: rgba(53, 53, 57, 0.5);
+  }
 }
 
 .heading {
@@ -100,8 +108,9 @@ bubble-card {
   }
 
   .title,
+  .description,
   .content {
-    display: none;
+    font-size: 8px;
   }
 }
 
@@ -111,6 +120,38 @@ bubble-card {
   .icon>svg {
     height: 50cqmin;
     width: 50cqmin;
+  }
+
+  .title,
+  .description,
+  .content {
+    font-size: 8px;
+  }
+}
+
+@container card (height < 100px) and (width < 100px) {
+
+  .icon>img,
+  .icon>svg {
+    height: 50cqmin;
+    width: 50cqmin;
+  }
+
+  .content {
+    display: none;
+  }
+}
+
+@container card (height < 50px) and (width < 50px) {
+
+  .bubble {
+    background-color: red;
+  }
+
+  .icon>img,
+  .icon>svg {
+    height: 100%;
+    width: 100%;
   }
 
   .title,
